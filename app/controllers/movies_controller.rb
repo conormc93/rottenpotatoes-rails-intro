@@ -14,14 +14,14 @@ class MoviesController < ApplicationController
     # Using ssssion[] hash for remembering
     @all_ratings = Movie.ratings # Assign Movie.ratings to all ratings
     @sort = params[:sort] || session[:sort] # assign sorted values to sort
-    session[:ratings] = session[:ratings] || {'G'=>'','PG'=>'','PG-13'=>'','R'=>''}
+    session[:ratings] = session[:ratings] || {'G'=>'','PG'=>'','PG-13'=>'','R'=>''} # set ratings to nill
     @t_param = params[:ratings] || session[:ratings]
     session[:sort] = @sort
     session[:ratings] = @t_param 
     @movies = Movie.where(rating: session[:ratings].keys).order(session[:sort])
 
     # if null values exist redirect
-    if(params[:sort].nil? and !(session[:sort].nil?)) or (params[:ratings].nil? and !(session[:rating].nil?))
+    if(params[:sort].nil? and !(session[:sort].nil?)) or (params[:ratings].nil? or !(session[:rating].nil?))
      flash.keep
      # URI is lacking the right params[] so forced to fill them in from the session[]
      redirect_to movies_path(sort: session[:sort], ratings: session[:ratings])
